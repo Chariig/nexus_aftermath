@@ -13,6 +13,7 @@ dependencies {
 }
 
 server_scripts {
+    '@oxmysql/lib/MySQL.lua',
     'config.lua',
     'shared/*.lua',
     'server/*.lua',
