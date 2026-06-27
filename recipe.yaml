@@ -9,27 +9,26 @@ tasks:
     src: https://github.com/Chariig/nexus_aftermath
     ref: master
     dest: ./resources/[nexus]/nexus_apocalypse
-    subpath: /
 
   # Download core dependencies
   - action: download_github
     src: https://github.com/overextended/oxmysql
-    ref: master
+    ref: main
     dest: ./resources/[core]/oxmysql
 
   - action: download_github
     src: https://github.com/overextended/ox_lib
-    ref: master
+    ref: main
     dest: ./resources/[core]/ox_lib
 
   - action: download_github
     src: https://github.com/overextended/ox_inventory
-    ref: master
+    ref: main
     dest: ./resources/[core]/ox_inventory
 
   - action: download_github
     src: https://github.com/overextended/ox_target
-    ref: master
+    ref: main
     dest: ./resources/[core]/ox_target
 
   # Remove default CFX resources
