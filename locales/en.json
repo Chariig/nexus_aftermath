@@ -1,0 +1,50 @@
+{
+    "en": {
+        "error": "Error",
+        "success": "Success",
+        "info": "Information",
+
+        "player_loaded": "You have entered the wasteland",
+        "player_not_found": "Survivor not found",
+        "not_enough_money": "Not enough supplies",
+        "item_not_found": "Item not found",
+        "inventory_full": "Inventory full",
+
+        "infection_contracted": "You feel something wrong...",
+        "infection_cured": "The infection has been purged",
+        "infection_mutated": "Your infection has mutated",
+        "infection_stage": "Infection Stage: {stage} - {label}",
+
+        "tether_established": "Tether established",
+        "tether_broken": "Tether broken",
+        "tether_too_far": "Tether target is too far",
+
+        "radio_freq_set": "Radio set to {freq} MHz",
+        "radio_transmitting": "Transmitting on {freq} MHz",
+        "radio_jammed": "Signal jammed",
+
+        "echo_recorded": "Echo recorded",
+        "echo_found": "Echo found nearby",
+        "echo_played": "Playing echo...",
+
+        "structure_placed": "Structure placed",
+        "structure_removed": "Structure removed",
+        "structure_repaired": "Structure repaired",
+        "structure_collapsed": "Structure collapsed",
+
+        "scavenger_spotted": "A scavenger has been spotted",
+        "scavenger_killed": "Scavenger eliminated",
+        "scavenger_trade": "Scavenger offers to trade",
+
+        "world_tier_changed": "World Tier: {tier}",
+        "world_event_started": "Event: {event}",
+        "world_event_ended": "Event ended: {event}",
+
+        "safe_zone_enter": "Entering safe zone",
+        "safe_zone_exit": "Leaving safe zone",
+
+        "build_menu": "Construction Menu",
+        "craft_menu": "Crafting Menu",
+        "radio_menu": "Radio Controls"
+    }
+}

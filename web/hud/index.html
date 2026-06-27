@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="hud">
+        <div id="top-left">
+            <div id="health-bar"><div id="health-fill"></div><span id="health-text">100</span></div>
+            <div id="armor-bar"><div id="armor-fill"></div><span id="armor-text">0</span></div>
+        </div>
+        <div id="top-right">
+            <div id="stats">
+                <div class="stat"><span class="stat-icon">&#127837;</span><div class="stat-bar"><div id="hunger-fill"></div></div></div>
+                <div class="stat"><span class="stat-icon">&#128168;</span><div class="stat-bar"><div id="thirst-fill"></div></div></div>
+            </div>
+            <div id="infection-warning" class="hidden">
+                <div id="infection-bar"><div id="infection-fill"></div></div>
+                <span id="infection-label">CLEAN</span>
+            </div>
+        </div>
+        <div id="bottom-left">
+            <div id="location">Unknown</div>
+            <div id="zone">San Andreas</div>
+        </div>
+        <div id="bottom-right">
+            <div id="radio-display">--- MHz</div>
+            <div id="tether-indicator" class="hidden">&#128279; Tethered</div>
+        </div>
+        <div id="center-top">
+            <div id="world-tier">SAFE ZONE</div>
+            <div id="player-count">0 survivors</div>
+        </div>
+        <div id="vehicle-hud" class="hidden">
+            <div id="speed-display">0</div>
+            <div id="speed-unit">KM/H</div>
+            <div id="fuel-bar"><div id="fuel-fill"></div></div>
+            <div id="gear-display">N</div>
+            <div id="rpm-bar"><div id="rpm-fill"></div></div>
+        </div>
+        <div id="event-notification" class="hidden">
+            <div id="event-title"></div>
+            <div id="event-desc"></div>
+        </div>
+        <div id="skills-display">
+            <div class="skill" data-skill="crafting">&#9879;</div>
+            <div class="skill" data-skill="combat">&#9876;</div>
+            <div class="skill" data-skill="survival">&#127891;</div>
+            <div class="skill" data-skill="medical">&#65823;</div>
+        </div>
+    </div>
+    <div id="notifications"></div>
+    <script src="script.js"></script>
+</body>
+</html>

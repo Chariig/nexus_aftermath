@@ -1,0 +1,63 @@
+$engine: 3
+$onesync: on
+name: Nexus Aftermath
+description: Recipe for the Nexus Aftermath apocalypse framework. Downloads dependencies and removes default CFX resources. The framework files, config, server.cfg and database setup must be done manually after this recipe completes.
+
+tasks:
+  # Download core dependencies
+  - action: download_github
+    src: https://github.com/overextended/oxmysql
+    ref: master
+    dest: ./resources/[core]/oxmysql
+
+  - action: download_github
+    src: https://github.com/overextended/ox_lib
+    ref: master
+    dest: ./resources/[core]/ox_lib
+
+  - action: download_github
+    src: https://github.com/overextended/ox_inventory
+    ref: master
+    dest: ./resources/[core]/ox_inventory
+
+  - action: download_github
+    src: https://github.com/overextended/ox_target
+    ref: master
+    dest: ./resources/[core]/ox_target
+
+  # Remove default CFX resources
+  - action: remove_path
+    path: ./resources/[gameplay]
+
+  - action: remove_path
+    path: ./resources/[standalone]
+
+  - action: remove_path
+    path: ./resources/[voice]
+
+  - action: remove_path
+    path: ./resources/mapmanager
+
+  - action: remove_path
+    path: ./resources/spawnmanager
+
+  - action: remove_path
+    path: ./resources/sessionmanager
+
+  - action: remove_path
+    path: ./resources/basic-gamemode
+
+  - action: remove_path
+    path: ./resources/hardcap
+
+  - action: remove_path
+    path: ./resources/rconlog
+
+  - action: remove_path
+    path: ./resources/webpack
+
+  - action: remove_path
+    path: ./resources/chat
+
+  - action: remove_path
+    path: ./resources/connectqueue

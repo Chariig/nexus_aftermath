@@ -1,0 +1,318 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Courier New', monospace;
+    color: #e0e0e0;
+    user-select: none;
+}
+
+body {
+    background: transparent;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+
+#inventory-container, #crafting-container, #radio-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(10, 10, 10, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+    width: 700px;
+    max-height: 80vh;
+    overflow: hidden;
+}
+
+#inventory-header, #crafting-header, #radio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#inventory-title, #crafting-title, #radio-title {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #4caf50;
+}
+
+#weight-display {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+#close-btn, #crafting-close-btn, #radio-close-btn {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+#close-btn:hover, #crafting-close-btn:hover, #radio-close-btn:hover {
+    background: rgba(244, 67, 54, 0.3);
+    border-color: #f44336;
+}
+
+#inventory-tabs {
+    display: flex;
+    gap: 2px;
+    padding: 8px 15px;
+    background: rgba(0, 0, 0, 0.3);
+    overflow-x: auto;
+}
+
+.tab {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 4px 12px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.tab:hover { background: rgba(76, 175, 80, 0.2); }
+.tab.active { background: rgba(76, 175, 80, 0.3); border-color: #4caf50; }
+
+#inventory-grid, #crafting-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    padding: 15px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.inv-slot {
+    aspect-ratio: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+    min-height: 80px;
+}
+
+.inv-slot:hover {
+    background: rgba(76, 175, 80, 0.15);
+    border-color: rgba(76, 175, 80, 0.4);
+}
+
+.inv-slot.has-item {
+    border-color: rgba(76, 175, 80, 0.3);
+}
+
+.inv-slot .item-icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+
+.inv-slot .item-name {
+    font-size: 8px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.2;
+}
+
+.inv-slot .item-count {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.craft-recipe {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.craft-recipe:hover {
+    background: rgba(76, 175, 80, 0.15);
+    border-color: #4caf50;
+}
+
+.craft-recipe .recipe-name {
+    font-size: 11px;
+    color: #4caf50;
+    margin-bottom: 4px;
+}
+
+.craft-recipe .recipe-ingredients {
+    font-size: 8px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.craft-recipe .recipe-skill {
+    font-size: 8px;
+    color: #ff9800;
+    margin-top: 2px;
+}
+
+.craft-recipe.locked {
+    opacity: 0.4;
+}
+
+#radio-content {
+    padding: 15px;
+}
+
+#radio-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+#radio-freq-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 4px;
+    background: linear-gradient(90deg, #4caf50, #ff9800, #f44336);
+    outline: none;
+}
+
+#radio-freq-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+#radio-freq-display {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4caf50;
+    text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+    min-width: 120px;
+    text-align: center;
+}
+
+#radio-freq-input {
+    width: 100px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 6px 10px;
+    font-size: 12px;
+    outline: none;
+}
+
+#radio-freq-input:focus { border-color: #4caf50; }
+
+#radio-set-btn {
+    background: rgba(76, 175, 80, 0.3);
+    border: 1px solid #4caf50;
+    padding: 6px 15px;
+    cursor: pointer;
+    font-size: 10px;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+}
+
+#radio-set-btn:hover { background: rgba(76, 175, 80, 0.5); }
+
+#radio-transmit {
+    margin-bottom: 15px;
+}
+
+#radio-message {
+    width: 100%;
+    height: 60px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px;
+    font-size: 12px;
+    resize: none;
+    outline: none;
+    margin-bottom: 8px;
+}
+
+#radio-message:focus { border-color: #4caf50; }
+
+#radio-send-btn {
+    background: rgba(76, 175, 80, 0.3);
+    border: 1px solid #4caf50;
+    padding: 8px 20px;
+    cursor: pointer;
+    font-size: 10px;
+    letter-spacing: 2px;
+    transition: all 0.2s;
+}
+
+#radio-send-btn:hover { background: rgba(76, 175, 80, 0.5); }
+
+#radio-encrypt-label {
+    font-size: 10px;
+    margin-left: 15px;
+    cursor: pointer;
+}
+
+#radio-encrypt-label input { margin-right: 5px; }
+
+#radio-log {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.radio-log-entry {
+    font-size: 10px;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.radio-log-entry .freq { color: #4caf50; }
+.radio-log-entry .sender { color: #2196f3; }
+.radio-log-entry .msg { color: rgba(255, 255, 255, 0.7); }
+
+#item-tooltip {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    max-width: 250px;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+#tooltip-name {
+    font-size: 12px;
+    color: #4caf50;
+    margin-bottom: 4px;
+}
+
+#tooltip-desc {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.3;
+}
+
+#tooltip-stats {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 4px;
+}
+
+.hidden { display: none !important; }
