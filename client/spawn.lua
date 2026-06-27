@@ -26,23 +26,24 @@ AddEventHandler('na:characterList', function(characters)
 end)
 
 RegisterNUICallback('selectCharacter', function(data, cb)
-    cb({})
-    SetNuiFocus(false, false)
     TriggerServerEvent('na:selectCharacter', data.citizenId)
+    cb({})
 end)
 
 RegisterNUICallback('newCharacter', function(_, cb)
-    cb({})
     NA.Client.Spawn.OpenCreator()
+    cb({})
 end)
 
 RegisterNUICallback('deleteCharacter', function(data, cb)
-    cb({})
     TriggerServerEvent('na:deleteCharacter', data.citizenId)
+    cb({})
 end)
 
 function NA.Client.Spawn.OpenCreator()
-    SetNuiFocus(true, true)
+    NA.Debug('OpenCreator called')
+
+    local ped = PlayerPedId()
 
     local model = joaat('mp_m_freemode_01')
     RequestModel(model)
@@ -50,18 +51,27 @@ function NA.Client.Spawn.OpenCreator()
     SetPlayerModel(PlayerId(), model)
     SetModelAsNoLongerNeeded(model)
 
-    local ped = PlayerPedId()
-    SetEntityVisible(ped, true, false)
+    Citizen.Wait(100)
 
-    SetEntityCoords(ped, 0.0, 0.0, 71.0)
+    ped = PlayerPedId()
+    SetEntityVisible(ped, true, false)
+    FreezeEntityPosition(ped, true)
+
+    local pos = vector3(0.0, 0.0, 200.0)
+    SetEntityCoords(ped, pos.x, pos.y, pos.z, false, false, false, true)
+    SetEntityHeading(ped, 0.0)
+    SetFocusPosAndVec(pos.x, pos.y, pos.z, 0.0, 0.0, 0.0)
+
+    Citizen.Wait(100)
 
     local cam = CreateCam('DEFAULT_SCRIPTED_CAMERA', true)
-    SetCamCoord(cam, 2.5, 0.0, 72.0)
-    PointCamAtEntity(cam, ped, 0.0, 0.0, 0.0, true)
+    SetCamCoord(cam, pos.x + 2.0, pos.y, pos.z + 0.3)
+    SetCamRot(cam, 0.0, 0.0, 270.0, 0)
     SetCamActive(cam, true)
-    RenderScriptCams(true, false, 0, true, true)
+    RenderScriptCams(true, true, 1000, true, true)
 
     SendNUIMessage({ type = 'showCreator', editData = nil })
+
     NA.Client.CreatorCam = cam
     NA.Client.CreatorActive = true
 
@@ -76,43 +86,43 @@ function NA.Client.Spawn.OpenCreator()
 end
 
 RegisterNUICallback('updateAppearance', function(data, cb)
-    cb({})
     NA.Client.CreatorAppearance = data
+    cb({})
 end)
 
 RegisterNUICallback('saveCharacter', function(data, cb)
-    cb({})
-    SetNuiFocus(false, false)
-
     if NA.Client.CreatorCam then
         RenderScriptCams(false, false, 0, true, true)
         DestroyCam(NA.Client.CreatorCam, false)
         NA.Client.CreatorCam = nil
     end
     NA.Client.CreatorActive = false
+    SetNuiFocus(false, false)
 
     local ped = PlayerPedId()
     SetEntityVisible(ped, false, false)
 
-    local appearance = NA.Client.CreatorAppearance or {}
+    SetFocusPosAndVec(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
 
     TriggerServerEvent('na:saveCharacter', {
         firstname = data.firstname,
         lastname = data.lastname,
         gender = data.gender,
         dateofbirth = data.dateofbirth,
-        appearance = appearance,
+        appearance = NA.Client.CreatorAppearance or {},
     })
+
+    cb({})
 end)
 
 RegisterNUICallback('cancelCharacter', function(_, cb)
-    cb({})
     SetNuiFocus(false, false)
 
     if NA.Client.CreatorCam then
         RenderScriptCams(false, false, 0, true, true)
         DestroyCam(NA.Client.CreatorCam, false)
         NA.Client.CreatorCam = nil
+        SetFocusPosAndVec(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
     end
     NA.Client.CreatorActive = false
 
@@ -120,6 +130,8 @@ RegisterNUICallback('cancelCharacter', function(_, cb)
     SetEntityVisible(ped, false, false)
 
     NA.Client.Spawn.Init()
+
+    cb({})
 end)
 
 function NA.Client.Spawn.ApplyAppearance(app)
@@ -132,6 +144,7 @@ function NA.Client.Spawn.ApplyAppearance(app)
         while not HasModelLoaded(model) do Citizen.Wait(0) end
         SetPlayerModel(PlayerId(), model)
         SetModelAsNoLongerNeeded(model)
+        Citizen.Wait(50)
         ped = PlayerPedId()
     end
 
@@ -159,21 +172,15 @@ function NA.Client.Spawn.ApplyAppearance(app)
     if beard.style ~= nil then SetPedHeadOverlay(ped, 1, beard.style, 1.0) end
     if beard.color ~= nil then SetPedHeadOverlayColor(ped, 1, 1, beard.color, 0) end
 
-    local function overlay(idx, val)
-        if val ~= nil and type(val) == 'number' and val > 0 then
-            SetPedHeadOverlay(ped, idx, val, 1.0)
-        end
-    end
-
-    overlay(0, app.blemishes)
-    overlay(3, app.ageing)
-    overlay(6, app.complexion)
-    overlay(9, app.freckles)
-    overlay(4, app.makeup)
-    overlay(5, app.blush)
-    overlay(8, app.lipstick)
-    overlay(10, app.chest)
-    overlay(12, app.bodyBlemishes)
+    if app.blemishes ~= nil and app.blemishes > 0 then SetPedHeadOverlay(ped, 0, app.blemishes, 1.0) end
+    if app.ageing ~= nil and app.ageing > 0 then SetPedHeadOverlay(ped, 3, app.ageing, 1.0) end
+    if app.complexion ~= nil and app.complexion > 0 then SetPedHeadOverlay(ped, 6, app.complexion, 1.0) end
+    if app.freckles ~= nil and app.freckles > 0 then SetPedHeadOverlay(ped, 9, app.freckles, 1.0) end
+    if app.makeup ~= nil and app.makeup > 0 then SetPedHeadOverlay(ped, 4, app.makeup, 1.0) end
+    if app.blush ~= nil and app.blush > 0 then SetPedHeadOverlay(ped, 5, app.blush, 1.0) end
+    if app.lipstick ~= nil and app.lipstick > 0 then SetPedHeadOverlay(ped, 8, app.lipstick, 1.0) end
+    if app.chest ~= nil and app.chest > 0 then SetPedHeadOverlay(ped, 10, app.chest, 1.0) end
+    if app.bodyBlemishes ~= nil and app.bodyBlemishes > 0 then SetPedHeadOverlay(ped, 12, app.bodyBlemishes, 1.0) end
 end
 
 RegisterNetEvent('na:characterSpawn')
@@ -210,9 +217,11 @@ AddEventHandler('na:characterSpawn', function(data)
     TriggerEvent('na:ready', NA.Client.PlayerData)
 
     Citizen.CreateThread(function()
-        while true do
+        while NA.Client.IsLoaded do
             Citizen.Wait(3000)
-            TriggerServerEvent('na:updatePosition', GetEntityCoords(ped), GetEntityHeading(ped))
+            if NA.Client.PlayerData and NA.Client.PlayerData.citizenId then
+                TriggerServerEvent('na:updatePosition', GetEntityCoords(ped), GetEntityHeading(ped))
+            end
         end
     end)
 end)

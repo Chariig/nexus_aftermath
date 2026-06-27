@@ -35,49 +35,74 @@ window.addEventListener('message', (event) => {
     }
 });
 
+function nuiFetch(name, data) {
+    const url = 'https://' + document.domain + '/' + name;
+    console.log('nuiFetch:', url, JSON.stringify(data));
+    return fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data || {})
+    }).then(r => {
+        if (!r.ok) console.error('nuiFetch ' + name + ' status:', r.status);
+        return r;
+    }).catch(err => {
+        console.error('nuiFetch ' + name + ' error:', err);
+    });
+}
+
 function showSelector(chars) {
-    document.getElementById('hud').classList.add('hidden');
-    document.getElementById('selector-screen').classList.remove('hidden');
-    const list = document.getElementById('char-list');
+    var hud = document.getElementById('hud');
+    var screen = document.getElementById('selector-screen');
+    if (!hud || !screen) return;
+    hud.classList.add('hidden');
+    screen.classList.remove('hidden');
+
+    var list = document.getElementById('char-list');
+    if (!list) return;
     list.innerHTML = '';
+
     if (chars && chars.length > 0) {
-        chars.forEach(c => {
-            const card = document.createElement('div');
+        chars.forEach(function(c) {
+            var card = document.createElement('div');
             card.className = 'char-card';
             card.innerHTML = '<div class="char-name">' + escapeHtml(c.firstname || '') + ' ' + escapeHtml(c.lastname || '') + '</div><div class="char-info">' + escapeHtml(c.gender || '?') + ' &middot; ' + escapeHtml(c.dateofbirth || '??') + '</div>';
-            card.addEventListener('click', () => fetch(`https://${document.domain}/selectCharacter`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ citizenId: c.citizenId })
-            }));
+            card.addEventListener('click', function() {
+                nuiFetch('selectCharacter', { citizenId: c.citizenId });
+            });
             list.appendChild(card);
         });
     } else {
         list.innerHTML = '<div class="no-chars">No survivors found. Create one.</div>';
     }
-    document.getElementById('new-char-btn').onclick = () => {
-        fetch(`https://${document.domain}/newCharacter`, { method: 'POST' });
-    };
+
+    var btn = document.getElementById('new-char-btn');
+    if (btn) btn.onclick = function() { nuiFetch('newCharacter', {}); };
 }
 
 function closeSelector() {
-    document.getElementById('selector-screen').classList.add('hidden');
-    document.getElementById('hud').classList.remove('hidden');
+    var el = document.getElementById('selector-screen');
+    var hud = document.getElementById('hud');
+    if (el) el.classList.add('hidden');
+    if (hud) hud.classList.remove('hidden');
 }
 
 function showCreator() {
-    document.getElementById('selector-screen').classList.add('hidden');
-    document.getElementById('creator-screen').classList.remove('hidden');
+    var sel = document.getElementById('selector-screen');
+    var cr = document.getElementById('creator-screen');
+    if (sel) sel.classList.add('hidden');
+    if (cr) cr.classList.remove('hidden');
 }
 
 function closeCreator() {
-    document.getElementById('creator-screen').classList.add('hidden');
-    document.getElementById('selector-screen').classList.remove('hidden');
+    var cr = document.getElementById('creator-screen');
+    var sel = document.getElementById('selector-screen');
+    if (cr) cr.classList.add('hidden');
+    if (sel) sel.classList.remove('hidden');
 }
 
 function getAppearanceData() {
-    const data = { features: {} };
-    document.querySelectorAll('#panel-face input[data-feature]').forEach(el => {
+    var data = { features: {} };
+    document.querySelectorAll('#panel-face input[data-feature]').forEach(function(el) {
         data.features[el.dataset.feature] = parseFloat(el.value);
     });
     data.hair = {
@@ -107,128 +132,162 @@ function getAppearanceData() {
     return data;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('event-notification').classList.add('hidden');
-    document.getElementById('infection-warning').classList.add('hidden');
-    document.getElementById('tether-indicator').classList.add('hidden');
-    document.getElementById('vehicle-hud').classList.add('hidden');
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded - setting up UI');
 
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    var ev = document.getElementById('event-notification');
+    var iw = document.getElementById('infection-warning');
+    var ti = document.getElementById('tether-indicator');
+    var vh = document.getElementById('vehicle-hud');
+    if (ev) ev.classList.add('hidden');
+    if (iw) iw.classList.add('hidden');
+    if (ti) ti.classList.add('hidden');
+    if (vh) vh.classList.add('hidden');
+
+    document.querySelectorAll('.tab-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
             btn.classList.add('active');
-            document.querySelectorAll('.panel').forEach(p => p.classList.add('hidden'));
-            document.getElementById('panel-' + btn.dataset.tab).classList.remove('hidden');
+            document.querySelectorAll('.panel').forEach(function(p) { p.classList.add('hidden'); });
+            var panel = document.getElementById('panel-' + btn.dataset.tab);
+            if (panel) panel.classList.remove('hidden');
         });
     });
 
-    document.getElementById('cancel-char-btn').addEventListener('click', () => {
-        fetch(`https://${document.domain}/cancelCharacter`, { method: 'POST' });
+    var cancelBtn = document.getElementById('cancel-char-btn');
+    if (cancelBtn) cancelBtn.addEventListener('click', function() {
+        nuiFetch('cancelCharacter', {});
     });
 
-    document.getElementById('save-char-btn').addEventListener('click', () => {
-        const data = {
-            firstname: document.getElementById('c-firstname').value.trim(),
-            lastname: document.getElementById('c-lastname').value.trim(),
+    var saveBtn = document.getElementById('save-char-btn');
+    if (saveBtn) saveBtn.addEventListener('click', function() {
+        console.log('Save & Play clicked');
+        var firstname = document.getElementById('c-firstname');
+        var lastname = document.getElementById('c-lastname');
+        if (!firstname || !lastname) { console.error('Name inputs not found'); return; }
+        var fn = firstname.value.trim();
+        var ln = lastname.value.trim();
+        if (!fn || !ln) {
+            alert('First and last name required.');
+            return;
+        }
+        var data = {
+            firstname: fn,
+            lastname: ln,
             gender: document.getElementById('c-gender').value,
             dateofbirth: document.getElementById('c-dob').value || 'Unknown',
             appearance: getAppearanceData()
         };
-        if (!data.firstname || !data.lastname) {
-            alert('First and last name required.');
-            return;
-        }
-        fetch(`https://${document.domain}/saveCharacter`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+        nuiFetch('saveCharacter', data);
+    });
+
+    document.querySelectorAll('#creator-panels input[type="range"]').forEach(function(el) {
+        el.addEventListener('input', function() {
+            nuiFetch('updateAppearance', getAppearanceData());
         });
     });
 
-    document.querySelectorAll('#creator-panels input[type="range"]').forEach(el => {
-        el.addEventListener('input', () => {
-            const allData = getAppearanceData();
-            fetch(`https://${document.domain}/updateAppearance`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(allData)
-            });
-        });
-    });
+    console.log('UI setup complete');
 });
 
+window.onerror = function(msg, url, line, col, error) {
+    console.error('JS Error:', msg, 'at', url, line + ':' + col);
+    return false;
+};
+
 function escapeHtml(str) {
-    const d = document.createElement('div');
+    var d = document.createElement('div');
     d.textContent = str;
     return d.innerHTML;
 }
 
 function updateHUD(d) {
-    const health = document.getElementById('health-fill');
-    const healthText = document.getElementById('health-text');
-    health.style.width = Math.max(0, (d.health / 200) * 100) + '%';
-    healthText.textContent = Math.floor(d.health);
+    var healthFill = document.getElementById('health-fill');
+    var healthText = document.getElementById('health-text');
+    if (healthFill) healthFill.style.width = Math.max(0, (d.health / 200) * 100) + '%';
+    if (healthText) healthText.textContent = Math.floor(d.health);
 
-    const armor = document.getElementById('armor-fill');
-    const armorText = document.getElementById('armor-text');
-    armor.style.width = Math.min(100, d.armor) + '%';
-    armorText.textContent = Math.floor(d.armor);
+    var armorFill = document.getElementById('armor-fill');
+    var armorText = document.getElementById('armor-text');
+    if (armorFill) armorFill.style.width = Math.min(100, d.armor) + '%';
+    if (armorText) armorText.textContent = Math.floor(d.armor);
 
-    document.getElementById('hunger-fill').style.width = d.hunger + '%';
-    document.getElementById('thirst-fill').style.width = d.thirst + '%';
+    var hungerFill = document.getElementById('hunger-fill');
+    if (hungerFill) hungerFill.style.width = d.hunger + '%';
+    var thirstFill = document.getElementById('thirst-fill');
+    if (thirstFill) thirstFill.style.width = d.thirst + '%';
 
-    const infWarn = document.getElementById('infection-warning');
+    var infWarn = document.getElementById('infection-warning');
     if (d.infection && d.infection.strain) {
-        infWarn.classList.remove('hidden');
-        const infFill = document.getElementById('infection-fill');
-        infFill.style.width = (d.infection.level || 0) + '%';
-        const stage = d.infection.level >= 80 ? 'FINAL' : d.infection.level >= 60 ? 'CRITICAL' : d.infection.level >= 40 ? 'ADVANCED' : d.infection.level >= 20 ? 'EARLY' : 'EXPOSED';
-        document.getElementById('infection-label').textContent = stage + ' - ' + d.infection.strain;
+        if (infWarn) {
+            infWarn.classList.remove('hidden');
+            var infFill = document.getElementById('infection-fill');
+            if (infFill) infFill.style.width = (d.infection.level || 0) + '%';
+            var infLabel = document.getElementById('infection-label');
+            if (infLabel) {
+                var stage = d.infection.level >= 80 ? 'FINAL' : d.infection.level >= 60 ? 'CRITICAL' : d.infection.level >= 40 ? 'ADVANCED' : d.infection.level >= 20 ? 'EARLY' : 'EXPOSED';
+                infLabel.textContent = stage + ' - ' + d.infection.strain;
+            }
+        }
     } else {
-        infWarn.classList.add('hidden');
+        if (infWarn) infWarn.classList.add('hidden');
     }
 
-    document.getElementById('location').textContent = d.location || 'Unknown';
-    document.getElementById('zone').textContent = d.area || 'San Andreas';
+    var loc = document.getElementById('location');
+    if (loc) loc.textContent = d.location || 'Unknown';
+    var zone = document.getElementById('zone');
+    if (zone) zone.textContent = d.area || 'San Andreas';
 
-    const tier = document.getElementById('world-tier');
-    tier.textContent = d.tier ? d.tier.toUpperCase() : 'SAFE';
-    tier.style.color = HUD.tierColors[d.tier] || '#4caf50';
-
-    document.getElementById('player-count').textContent = (d.playerCount || 0) + ' survivors';
-
-    const radioEl = document.getElementById('radio-display');
-    if (d.radioFreq && d.radioFreq > 0) {
-        radioEl.textContent = Math.floor(d.radioFreq) + ' MHz';
-        radioEl.style.display = 'block';
-    } else {
-        radioEl.textContent = '--- MHz';
+    var tier = document.getElementById('world-tier');
+    if (tier) {
+        tier.textContent = d.tier ? d.tier.toUpperCase() : 'SAFE';
+        tier.style.color = HUD.tierColors[d.tier] || '#4caf50';
     }
 
-    const tetherInd = document.getElementById('tether-indicator');
-    if (d.tethered && d.tethered.length > 0) {
-        tetherInd.classList.remove('hidden');
-        tetherInd.textContent = '\u{1F517} Tethered (' + d.tethered.length + ')';
-    } else {
-        tetherInd.classList.add('hidden');
+    var pc = document.getElementById('player-count');
+    if (pc) pc.textContent = (d.playerCount || 0) + ' survivors';
+
+    var radioEl = document.getElementById('radio-display');
+    if (radioEl) {
+        if (d.radioFreq && d.radioFreq > 0) {
+            radioEl.textContent = Math.floor(d.radioFreq) + ' MHz';
+            radioEl.style.display = 'block';
+        } else {
+            radioEl.textContent = '--- MHz';
+        }
     }
 
-    const vehicleHUD = document.getElementById('vehicle-hud');
-    if (d.inVehicle) {
-        vehicleHUD.classList.remove('hidden');
-        document.getElementById('speed-display').textContent = d.speed || 0;
-        document.getElementById('fuel-fill').style.width = (d.fuel || 0) + '%';
-        document.getElementById('gear-display').textContent = d.gear ? 'D' + Math.floor(d.gear) : 'N';
-        const rpmPct = (d.rpm || 0) * 100;
-        document.getElementById('rpm-fill').style.width = rpmPct + '%';
-    } else {
-        vehicleHUD.classList.add('hidden');
+    var tetherInd = document.getElementById('tether-indicator');
+    if (tetherInd) {
+        if (d.tethered && d.tethered.length > 0) {
+            tetherInd.classList.remove('hidden');
+            tetherInd.textContent = '\u{1F517} Tethered (' + d.tethered.length + ')';
+        } else {
+            tetherInd.classList.add('hidden');
+        }
+    }
+
+    var vehicleHUD = document.getElementById('vehicle-hud');
+    if (vehicleHUD) {
+        if (d.inVehicle) {
+            vehicleHUD.classList.remove('hidden');
+            var sd = document.getElementById('speed-display');
+            if (sd) sd.textContent = d.speed || 0;
+            var ff = document.getElementById('fuel-fill');
+            if (ff) ff.style.width = (d.fuel || 0) + '%';
+            var gd = document.getElementById('gear-display');
+            if (gd) gd.textContent = d.gear ? 'D' + Math.floor(d.gear) : 'N';
+            var rf = document.getElementById('rpm-fill');
+            if (rf) rf.style.width = ((d.rpm || 0) * 100) + '%';
+        } else {
+            vehicleHUD.classList.add('hidden');
+        }
     }
 
     if (d.skills) {
-        document.querySelectorAll('.skill').forEach(el => {
-            const skillName = el.dataset.skill;
-            const level = d.skills[skillName] || 0;
+        document.querySelectorAll('.skill').forEach(function(el) {
+            var skillName = el.dataset.skill;
+            var level = d.skills[skillName] || 0;
             if (level > 0) {
                 el.classList.add('active');
                 el.title = skillName + ': ' + level;
@@ -240,17 +299,21 @@ function updateHUD(d) {
 }
 
 function showWorldEvent(eventData) {
-    const el = document.getElementById('event-notification');
+    var el = document.getElementById('event-notification');
+    if (!el) return;
     el.classList.remove('hidden');
-    document.getElementById('event-title').textContent = eventData.label;
-    document.getElementById('event-desc').textContent = eventData.description;
-    const tier = document.getElementById('world-tier');
-    el.style.borderColor = tier.style.color || '#fff';
-    setTimeout(() => {
+    var title = document.getElementById('event-title');
+    var desc = document.getElementById('event-desc');
+    if (title) title.textContent = eventData.label;
+    if (desc) desc.textContent = eventData.description;
+    var tier = document.getElementById('world-tier');
+    if (tier) el.style.borderColor = tier.style.color || '#fff';
+    setTimeout(function() {
         el.classList.add('hidden');
     }, 8000);
 }
 
 function hideWorldEvent() {
-    document.getElementById('event-notification').classList.add('hidden');
+    var el = document.getElementById('event-notification');
+    if (el) el.classList.add('hidden');
 }

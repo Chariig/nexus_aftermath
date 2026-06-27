@@ -1,7 +1,7 @@
 NexusAftermath = NexusAftermath or {}
 
 NexusAftermath.Config = {
-    debug = GetConvar('na_debug', 'false') == 'true',
+    debug = GetConvar('na_debug', 'true') == 'true',
     maxPlayers = tonumber(GetConvar('na_max_players', '64')),
     worldTier = GetConvar('na_world_tier', 'auto'),
     infectionRate = tonumber(GetConvar('na_infection_rate', '1.0')),
