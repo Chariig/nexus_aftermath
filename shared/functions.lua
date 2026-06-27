@@ -1,4 +1,5 @@
 NA = NA or {}
+NA.Server = {}
 NA.Players = NA.Players or {}
 NA.Events = NA.Events or {}
 NA.Timers = NA.Timers or {}

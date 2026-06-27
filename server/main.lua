@@ -8,11 +8,11 @@ AddEventHandler('onServerResourceStart', function(resource)
     NA.Debug('World Tier:', NexusAftermath.Config.worldTier)
     NA.Debug('Infection Rate:', NexusAftermath.Config.infectionRate)
 
-    local connected = MySQL.query.await('SELECT 1')
-    if connected then
+    local success, result = pcall(exports.oxmysql.query, exports.oxmysql, 'SELECT 1')
+    if success then
         NA.Debug('Database connected successfully')
     else
-        NA.Debug('WARNING: Database connection failed')
+        NA.Debug('WARNING: Database connection failed - ' .. tostring(result))
     end
 
     NA.Server.InitTables()

@@ -131,7 +131,11 @@ function NA.Server.Scavengers.ProcessAI(scav)
             scav.state = 'trading'
             TriggerClientEvent('na:scavengerTrade', nearestSrc, scav.id, scav.inventory)
         elseif nearestDist < 30 then
-            scav.state = 'fleeing' if scav.aggression < 40 else 'aggressive'
+            if scav.aggression < 40 then
+                scav.state = 'fleeing'
+            else
+                scav.state = 'aggressive'
+            end
             if scav.state == 'fleeing' then
                 local fleeDir = math.random() * math.pi * 2
                 local fleePos = vector3(

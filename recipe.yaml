@@ -26,22 +26,6 @@ tasks:
     src: ./tmp/ox_lib.zip
     dest: ./resources/[core]
 
-  # Download ox_inventory release zip
-  - action: download_file
-    url: https://github.com/overextended/ox_inventory/releases/latest/download/ox_inventory.zip
-    path: ./tmp/ox_inventory.zip
-  - action: unzip
-    src: ./tmp/ox_inventory.zip
-    dest: ./resources/[core]
-
-  # Download ox_target release zip
-  - action: download_file
-    url: https://github.com/overextended/ox_target/releases/latest/download/ox_target.zip
-    path: ./tmp/ox_target.zip
-  - action: unzip
-    src: ./tmp/ox_target.zip
-    dest: ./resources/[core]
-
   # Remove default CFX resources
   - action: remove_path
     path: ./resources/[gameplay]
