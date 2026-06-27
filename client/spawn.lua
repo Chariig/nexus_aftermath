@@ -60,8 +60,6 @@ function NA.Client.Spawn.OpenCreator()
     local pos = vector3(0.0, 0.0, 200.0)
     SetEntityCoords(ped, pos.x, pos.y, pos.z, false, false, false, true)
     SetEntityHeading(ped, 0.0)
-    SetFocusPosAndVec(pos.x, pos.y, pos.z, 0.0, 0.0, 0.0)
-
     Citizen.Wait(100)
 
     local cam = CreateCam('DEFAULT_SCRIPTED_CAMERA', true)
@@ -102,8 +100,6 @@ RegisterNUICallback('saveCharacter', function(data, cb)
     local ped = PlayerPedId()
     SetEntityVisible(ped, false, false)
 
-    SetFocusPosAndVec(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
-
     TriggerServerEvent('na:saveCharacter', {
         firstname = data.firstname,
         lastname = data.lastname,
@@ -122,7 +118,6 @@ RegisterNUICallback('cancelCharacter', function(_, cb)
         RenderScriptCams(false, false, 0, true, true)
         DestroyCam(NA.Client.CreatorCam, false)
         NA.Client.CreatorCam = nil
-        SetFocusPosAndVec(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
     end
     NA.Client.CreatorActive = false
 
