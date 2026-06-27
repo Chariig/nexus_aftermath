@@ -1,9 +1,16 @@
 $engine: 3
 $onesync: on
 name: Nexus Aftermath
-description: Recipe for the Nexus Aftermath apocalypse framework. Downloads dependencies and removes default CFX resources. The framework files, config, server.cfg and database setup must be done manually after this recipe completes.
+description: Recipe for the Nexus Aftermath apocalypse framework. Downloads the framework + dependencies and removes default CFX resources. Database setup must be done manually after this recipe completes.
 
 tasks:
+  # Download Nexus Aftermath framework
+  - action: download_github
+    src: https://github.com/Chariig/nexus_aftermath
+    ref: master
+    dest: ./resources/[nexus]/nexus_apocalypse
+    subpath: /
+
   # Download core dependencies
   - action: download_github
     src: https://github.com/overextended/oxmysql
