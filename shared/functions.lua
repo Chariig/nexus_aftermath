@@ -47,11 +47,17 @@ function NA.VectorToTable(vec)
 end
 
 function NA.Distance(a, b)
-    local ax, ay, az = type(a) == 'table' and a.x or a, type(a) == 'table' and a.y or b or 0, type(a) == 'table' and a.z or 0
-    local bx, by, bz = type(b) == 'table' and b.x or b or 0, type(b) == 'table' and b.y or 0, type(b) == 'table' and b.z or 0
     if type(a) == 'number' and type(b) == 'number' then
         return math.abs(a - b)
     end
+    local function getCoords(v)
+        local t = type(v)
+        if t == 'vector3' then return v.x, v.y, v.z end
+        if t == 'table' then return v.x or v[1] or 0, v.y or v[2] or 0, v.z or v[3] or 0 end
+        return 0, 0, 0
+    end
+    local ax, ay, az = getCoords(a)
+    local bx, by, bz = getCoords(b)
     local dx, dy, dz = bx - ax, by - ay, bz - az
     return math.sqrt(dx*dx + dy*dy + dz*dz)
 end
