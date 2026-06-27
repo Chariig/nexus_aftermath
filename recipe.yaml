@@ -1,6 +1,5 @@
 $engine: 3
 $onesync: on
-$serverConfig: ./server.cfg
 name: Nexus Aftermath
 description: Recipe for the Nexus Aftermath apocalypse framework. Downloads everything and creates server.cfg. Only manual step is importing sql/schema.sql into MySQL.
 
@@ -71,5 +70,5 @@ tasks:
 
   # Download server.cfg template to server root
   - action: download_file
-    src: https://raw.githubusercontent.com/Chariig/nexus_aftermath/master/server.cfg
-    dest: ./server.cfg
+    url: https://raw.githubusercontent.com/Chariig/nexus_aftermath/master/server.cfg
+    path: ./server.cfg
