@@ -67,3 +67,8 @@ tasks:
 
   - action: remove_path
     path: ./resources/connectqueue
+
+  # Download server.cfg template to server root
+  - action: download_file
+    src: https://raw.githubusercontent.com/Chariig/nexus_aftermath/master/server.cfg
+    dest: ./server.cfg
