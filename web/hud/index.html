@@ -6,6 +6,79 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="selector-screen" class="overlay hidden">
+        <div class="selector-box">
+            <div class="selector-header"><span class="logo-nexus">NEXUS</span><span class="logo-aftermath">: AFTERMATH</span></div>
+            <div class="selector-subtitle">CHOOSE YOUR SURVIVOR</div>
+            <div id="char-list"></div>
+            <button id="new-char-btn">+ NEW SURVIVOR</button>
+        </div>
+    </div>
+
+    <div id="creator-screen" class="overlay hidden">
+        <div class="creator-box">
+            <div class="creator-header">CREATE SURVIVOR</div>
+            <div class="creator-body">
+                <div class="creator-fields">
+                    <label>First Name <input id="c-firstname" maxlength="30"></label>
+                    <label>Last Name <input id="c-lastname" maxlength="30"></label>
+                    <label>Gender
+                        <select id="c-gender"><option value="male">Male</option><option value="female">Female</option></select>
+                    </label>
+                    <label>Date of Birth <input id="c-dob" placeholder="YYYY-MM-DD"></label>
+                </div>
+                <div class="creator-tabs">
+                    <button class="tab-btn active" data-tab="face">Face</button>
+                    <button class="tab-btn" data-tab="hair">Hair</button>
+                    <button class="tab-btn" data-tab="features">Features</button>
+                    <button class="tab-btn" data-tab="details">Details</button>
+                </div>
+                <div id="creator-panels">
+                    <div class="panel active" id="panel-face">
+                        <label>Nose Width <input type="range" min="-1" max="1" step="0.01" value="0" data-feature="0"></label>
+                        <label>Nose Height <input type="range" min="-1" max="1" step="0.01" value="0" data-feature="1"></label>
+                        <label>Nose Length <input type="range" min="-1" max="1" step="0.01" value="0" data-feature="2"></label>
+                        <label>Jaw Width <input type="range" min="-1" max="1" step="0.01" value="0" data-feature="3"></label>
+                        <label>Jaw Height <input type="range" min="-1" max="1" step="0.01" value="0" data-feature="4"></label>
+                        <label>Cheek Width <input type="range" min="-1" max="1" step="0.01" value="0" data-feature="5"></label>
+                        <label>Cheek Height <input type="range" min="-1" max="1" step="0.01" value="0" data-feature="6"></label>
+                        <label>Eye Size <input type="range" min="-1" max="1" step="0.01" value="0" data-feature="13"></label>
+                        <label>Lip Thickness <input type="range" min="-1" max="1" step="0.01" value="0" data-feature="8"></label>
+                        <label>Brow Height <input type="range" min="-1" max="1" step="0.01" value="0" data-feature="16"></label>
+                    </div>
+                    <div class="panel hidden" id="panel-hair">
+                        <label>Hair Style <input type="range" min="0" max="40" step="1" value="0" id="hair-style"></label>
+                        <label>Hair Color <input type="range" min="0" max="63" step="1" value="0" id="hair-color"></label>
+                        <label>Highlight Color <input type="range" min="0" max="63" step="1" value="0" id="hair-highlight"></label>
+                        <label>Eyebrow Style <input type="range" min="0" max="10" step="1" value="0" id="eyebrow-style"></label>
+                        <label>Eyebrow Color <input type="range" min="0" max="63" step="1" value="0" id="eyebrow-color"></label>
+                        <label>Eyebrow Opacity <input type="range" min="0" max="1" step="0.05" value="1" id="eyebrow-opacity"></label>
+                        <label>Facial Hair <input type="range" min="0" max="10" step="1" value="0" id="beard-style"></label>
+                        <label>Facial Hair Color <input type="range" min="0" max="63" step="1" value="0" id="beard-color"></label>
+                    </div>
+                    <div class="panel hidden" id="panel-features">
+                        <label>Blemishes <input type="range" min="0" max="10" step="1" value="0" id="blemish-style"></label>
+                        <label>Ageing <input type="range" min="0" max="10" step="1" value="0" id="ageing-style"></label>
+                        <label>Complexion <input type="range" min="0" max="10" step="1" value="0" id="complexion-style"></label>
+                        <label>Freckles <input type="range" min="0" max="10" step="1" value="0" id="freckle-style"></label>
+                        <label>Eye Color <input type="range" min="0" max="10" step="1" value="0" id="eye-color"></label>
+                    </div>
+                    <div class="panel hidden" id="panel-details">
+                        <label>Makeup <input type="range" min="0" max="10" step="1" value="0" id="makeup-style"></label>
+                        <label>Blush <input type="range" min="0" max="10" step="1" value="0" id="blush-style"></label>
+                        <label>Lipstick <input type="range" min="0" max="10" step="1" value="0" id="lipstick-style"></label>
+                        <label>Chest Hair <input type="range" min="0" max="10" step="1" value="0" id="chest-style"></label>
+                        <label>Body Blemishes <input type="range" min="0" max="10" step="1" value="0" id="bodyblemish-style"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="creator-actions">
+                <button id="cancel-char-btn">Back</button>
+                <button id="save-char-btn" class="primary">Save & Play</button>
+            </div>
+        </div>
+    </div>
+
     <div id="hud">
         <div id="top-left">
             <div id="health-bar"><div id="health-fill"></div><span id="health-text">100</span></div>

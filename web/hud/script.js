@@ -20,8 +20,148 @@ window.addEventListener('message', (event) => {
         case 'worldEventEnded':
             hideWorldEvent();
             break;
+        case 'showSelector':
+            showSelector(data.characters);
+            break;
+        case 'showCreator':
+            showCreator();
+            break;
+        case 'closeSelector':
+            closeSelector();
+            break;
+        case 'closeCreator':
+            closeCreator();
+            break;
     }
 });
+
+function showSelector(chars) {
+    document.getElementById('hud').classList.add('hidden');
+    document.getElementById('selector-screen').classList.remove('hidden');
+    const list = document.getElementById('char-list');
+    list.innerHTML = '';
+    if (chars && chars.length > 0) {
+        chars.forEach(c => {
+            const card = document.createElement('div');
+            card.className = 'char-card';
+            card.innerHTML = '<div class="char-name">' + escapeHtml(c.firstname || '') + ' ' + escapeHtml(c.lastname || '') + '</div><div class="char-info">' + escapeHtml(c.gender || '?') + ' &middot; ' + escapeHtml(c.dateofbirth || '??') + '</div>';
+            card.addEventListener('click', () => fetch(`https://${document.domain}/selectCharacter`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ citizenId: c.citizenId })
+            }));
+            list.appendChild(card);
+        });
+    } else {
+        list.innerHTML = '<div class="no-chars">No survivors found. Create one.</div>';
+    }
+    document.getElementById('new-char-btn').onclick = () => {
+        fetch(`https://${document.domain}/newCharacter`, { method: 'POST' });
+    };
+}
+
+function closeSelector() {
+    document.getElementById('selector-screen').classList.add('hidden');
+    document.getElementById('hud').classList.remove('hidden');
+}
+
+function showCreator() {
+    document.getElementById('selector-screen').classList.add('hidden');
+    document.getElementById('creator-screen').classList.remove('hidden');
+}
+
+function closeCreator() {
+    document.getElementById('creator-screen').classList.add('hidden');
+    document.getElementById('selector-screen').classList.remove('hidden');
+}
+
+function getAppearanceData() {
+    const data = { features: {} };
+    document.querySelectorAll('#panel-face input[data-feature]').forEach(el => {
+        data.features[el.dataset.feature] = parseFloat(el.value);
+    });
+    data.hair = {
+        style: parseInt(document.getElementById('hair-style').value),
+        color: parseInt(document.getElementById('hair-color').value),
+        highlight: parseInt(document.getElementById('hair-highlight').value)
+    };
+    data.eyebrows = {
+        style: parseInt(document.getElementById('eyebrow-style').value),
+        color: parseInt(document.getElementById('eyebrow-color').value),
+        opacity: parseFloat(document.getElementById('eyebrow-opacity').value)
+    };
+    data.beard = {
+        style: parseInt(document.getElementById('beard-style').value),
+        color: parseInt(document.getElementById('beard-color').value)
+    };
+    data.blemishes = parseInt(document.getElementById('blemish-style').value);
+    data.ageing = parseInt(document.getElementById('ageing-style').value);
+    data.complexion = parseInt(document.getElementById('complexion-style').value);
+    data.freckles = parseInt(document.getElementById('freckle-style').value);
+    data.eyeColor = parseInt(document.getElementById('eye-color').value);
+    data.makeup = parseInt(document.getElementById('makeup-style').value);
+    data.blush = parseInt(document.getElementById('blush-style').value);
+    data.lipstick = parseInt(document.getElementById('lipstick-style').value);
+    data.chest = parseInt(document.getElementById('chest-style').value);
+    data.bodyBlemishes = parseInt(document.getElementById('bodyblemish-style').value);
+    return data;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('event-notification').classList.add('hidden');
+    document.getElementById('infection-warning').classList.add('hidden');
+    document.getElementById('tether-indicator').classList.add('hidden');
+    document.getElementById('vehicle-hud').classList.add('hidden');
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.panel').forEach(p => p.classList.add('hidden'));
+            document.getElementById('panel-' + btn.dataset.tab).classList.remove('hidden');
+        });
+    });
+
+    document.getElementById('cancel-char-btn').addEventListener('click', () => {
+        fetch(`https://${document.domain}/cancelCharacter`, { method: 'POST' });
+    });
+
+    document.getElementById('save-char-btn').addEventListener('click', () => {
+        const data = {
+            firstname: document.getElementById('c-firstname').value.trim(),
+            lastname: document.getElementById('c-lastname').value.trim(),
+            gender: document.getElementById('c-gender').value,
+            dateofbirth: document.getElementById('c-dob').value || 'Unknown',
+            appearance: getAppearanceData()
+        };
+        if (!data.firstname || !data.lastname) {
+            alert('First and last name required.');
+            return;
+        }
+        fetch(`https://${document.domain}/saveCharacter`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+    });
+
+    document.querySelectorAll('#creator-panels input[type="range"]').forEach(el => {
+        el.addEventListener('input', () => {
+            const allData = getAppearanceData();
+            fetch(`https://${document.domain}/updateAppearance`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(allData)
+            });
+        });
+    });
+});
+
+function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+}
 
 function updateHUD(d) {
     const health = document.getElementById('health-fill');
@@ -106,7 +246,6 @@ function showWorldEvent(eventData) {
     document.getElementById('event-desc').textContent = eventData.description;
     const tier = document.getElementById('world-tier');
     el.style.borderColor = tier.style.color || '#fff';
-
     setTimeout(() => {
         el.classList.add('hidden');
     }, 8000);
@@ -115,10 +254,3 @@ function showWorldEvent(eventData) {
 function hideWorldEvent() {
     document.getElementById('event-notification').classList.add('hidden');
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('event-notification').classList.add('hidden');
-    document.getElementById('infection-warning').classList.add('hidden');
-    document.getElementById('tether-indicator').classList.add('hidden');
-    document.getElementById('vehicle-hud').classList.add('hidden');
-});

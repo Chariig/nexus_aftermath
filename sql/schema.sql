@@ -3,15 +3,16 @@
 CREATE DATABASE IF NOT EXISTS nexus_aftermath;
 USE nexus_aftermath;
 
--- Players table
+-- Players table (multicharacter support)
 CREATE TABLE IF NOT EXISTS na_players (
     citizenId VARCHAR(50) PRIMARY KEY,
-    license VARCHAR(100) UNIQUE,
+    license VARCHAR(100) NOT NULL,
     name VARCHAR(100),
     firstname VARCHAR(50),
     lastname VARCHAR(50),
     gender VARCHAR(10) DEFAULT 'male',
     dateofbirth VARCHAR(20) DEFAULT 'Unknown',
+    appearance TEXT DEFAULT '{}',
     health INT DEFAULT 200,
     armor INT DEFAULT 0,
     hunger INT DEFAULT 100,

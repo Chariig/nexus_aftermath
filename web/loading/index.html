@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Nexus: Aftermath</title><link rel="stylesheet" href="style.css"></head>
+<body>
+  <div class="loading-container">
+    <div class="logo"><span class="logo-nexus">NEXUS</span><span class="logo-aftermath">: AFTERMATH</span></div>
+    <div class="tagline">The world remembers everything.</div>
+    <div class="loader"><div class="bar"></div></div>
+    <div class="status">Connecting to the wasteland...</div>
+  </div>
+  <div class="bg"></div>
+  <script>
+    const statuses = ['Scanning for threats...', 'Calibrating radiation sensors...', 'Establishing safe zone...', 'The world remembers everything.'];
+    let i = 0;
+    setInterval(() => { document.querySelector('.status').textContent = statuses[i % statuses.length]; i++; }, 4000);
+  </script>
+</body>
+</html>

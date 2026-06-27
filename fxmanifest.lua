@@ -5,7 +5,6 @@ name 'nexus_apocalypse'
 description 'Nexus: Aftermath - Custom Standalone Apocalypse Framework'
 version '2.0.0'
 author 'NexusDev'
-url 'https://nexus-aftermath.dev'
 
 dependencies {
     'oxmysql',
@@ -47,7 +46,11 @@ files {
     'web/inventory/index.html',
     'web/inventory/script.js',
     'web/inventory/style.css',
+    'web/loading/index.html',
+    'web/loading/style.css',
 }
+
+loadscreen 'web/loading/index.html'
 
 ui_page 'web/hud/index.html'
 

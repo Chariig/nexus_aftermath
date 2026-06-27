@@ -328,3 +328,214 @@ body {
 .hidden {
     display: none !important;
 }
+
+.overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.selector-box, .creator-box {
+    background: rgba(10,10,10,0.95);
+    border: 1px solid rgba(255,255,255,0.15);
+    width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.selector-header {
+    text-align: center;
+    padding: 30px 20px 10px;
+    font-size: 28px;
+    letter-spacing: 5px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.logo-nexus { color: #4caf50; }
+.logo-aftermath { color: #f44336; }
+
+.selector-subtitle {
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.4);
+    padding: 10px 20px 20px;
+}
+
+#char-list {
+    padding: 0 20px;
+}
+
+.char-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.char-card:hover {
+    background: rgba(76,175,80,0.15);
+    border-color: #4caf50;
+}
+
+.char-name {
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.char-info {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 4px;
+}
+
+.no-chars {
+    text-align: center;
+    padding: 30px;
+    color: rgba(255,255,255,0.3);
+    font-size: 12px;
+    letter-spacing: 2px;
+}
+
+#new-char-btn {
+    display: block;
+    width: calc(100% - 40px);
+    margin: 20px;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid #4caf50;
+    color: #4caf50;
+    font-size: 12px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#new-char-btn:hover {
+    background: rgba(76,175,80,0.2);
+}
+
+.creator-header {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    letter-spacing: 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.creator-body {
+    padding: 20px;
+}
+
+.creator-fields label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.5);
+}
+
+.creator-fields input, .creator-fields select {
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+    padding: 8px;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+}
+
+.creator-tabs {
+    display: flex;
+    gap: 2px;
+    margin: 20px 0 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 10px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 8px;
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.3);
+    font-size: 10px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    color: #4caf50;
+    text-shadow: 0 0 10px rgba(76,175,80,0.5);
+}
+
+#creator-panels label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.5);
+}
+
+#creator-panels input[type="range"] {
+    display: block;
+    width: 100%;
+    margin-top: 2px;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(255,255,255,0.2);
+    outline: none;
+}
+
+#creator-panels input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: #4caf50;
+    cursor: pointer;
+}
+
+.creator-actions {
+    display: flex;
+    gap: 10px;
+    padding: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.creator-actions button {
+    flex: 1;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    font-size: 11px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.creator-actions button.primary {
+    background: #4caf50;
+    border-color: #4caf50;
+    color: #000;
+}
+
+.creator-actions button.primary:hover {
+    background: #66bb6a;
+}
+
+.creator-actions button:not(.primary):hover {
+    border-color: #4caf50;
+}

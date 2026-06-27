@@ -9,29 +9,6 @@ NA.Client.CraftingOpen = false
 NA.Client.RadioOpen = false
 NA.Client.IsLoaded = false
 
-RegisterNetEvent('na:playerDataLoaded')
-AddEventHandler('na:playerDataLoaded', function(data)
-    NA.Client.PlayerData = data.charData
-    NA.Client.Infection = data.infection or {}
-    NA.Client.Stats = data.stats or {}
-    NA.Client.Skills = data.skills or {}
-    NA.Client.Reputation = data.reputation or {}
-    NA.Client.Config = data.config
-    NA.Client.WorldData = data.world
-    NA.Client.IsLoaded = true
-
-    if NA.Client.PlayerData.position then
-        SetEntityCoords(PlayerPedId(), NA.Client.PlayerData.position.x, NA.Client.PlayerData.position.y, NA.Client.PlayerData.position.z)
-        if NA.Client.PlayerData.position.heading then
-            SetEntityHeading(PlayerPedId(), NA.Client.PlayerData.position.heading)
-        end
-    end
-
-    NA.Client.SetupKeybinds()
-    NA.Debug('Player data loaded:', NA.Client.PlayerData.citizenId)
-    TriggerEvent('na:ready', NA.Client.PlayerData)
-end)
-
 RegisterNetEvent('na:worldSync')
 AddEventHandler('na:worldSync', function(data)
     NA.Client.WorldData = data
@@ -418,4 +395,7 @@ Citizen.CreateThread(function()
     end
 end)
 
-TriggerServerEvent('na:playerJoin')
+Citizen.CreateThread(function()
+    Citizen.Wait(100)
+    NA.Client.Spawn.Init()
+end)
